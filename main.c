@@ -80,7 +80,7 @@ int main(void) {
 	while( statementbuffer != NULL ) {
 		stringstatements[statementindex] = (char*) calloc(statementcount,sizeof(char));
 		strcpy(stringstatements[statementindex],statementbuffer);
-	    statementbuffer = strtok(NULL, "\n");
+	    	statementbuffer = strtok(NULL, "\n");
 		statementindex++;
 	}
 	
@@ -146,15 +146,15 @@ int main(void) {
 	
 	for (int programcount = 0; programcount < statementcount; programcount++) {
 		struct statement statement = statements[programcount];
+		if (statement.constant.type=='r') {
+			struct variable referenced = memory[uwutoindex(statement.constant.string)];
+			statement.constant = referenced;
+		}
 		switch (statement.opcode) {
 			case 0:
 				memory[statement.memory] = statement.constant;
 				break;
 			case 1:
-				if (statement.constant.type=='r') {
-					struct variable referenced = memory[uwutoindex(statement.constant.string)];
-					statement.constant = referenced;
-				}
 				switch (statement.constant.type) {
 					case 'i':
 						memory[statement.memory].integer = memory[statement.memory].integer + statement.constant.integer;
