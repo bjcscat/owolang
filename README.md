@@ -19,10 +19,17 @@ Print is structured as
 OPERATION MEMORY
 
 owo - STORE - Stores a constant into given memory.
+
 Owo - ADD - Adds two values
+
 oWo SUBTRACT - Subtracts two values
+
 OWo MULTIPLY - Multiplies two values
+
 owO DIVIDE - Divides two values
+
 OwO EXPONENT - Returns the power of two values
+
 oWO PRINT - Prints a value from memory.
+
 OWO CONDJUMP - If a memory value is nonzero, jump to given integer statement index.
