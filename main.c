@@ -16,26 +16,6 @@ struct statement {
 	struct variable constant;
 };
 
-struct variable typeprocess(char* input) {
-	struct variable trt;
-	switch (input[0]) {
-		case 'i':
-			trt.integer = atoi(input+2);
-			trt.type = 'i';
-			break;
-		case 'f':
-			trt.floatval = atof(input+2);
-			trt.type = 'f';
-			break;
-		case 's':
-			trt.string = (char*) calloc(sizeof(input),sizeof(char));
-			trt.string = input+2;
-			trt.type = 's';
-			break;
-	}
-	return trt;
-}
-
 int uwutoindex(char* uwutc) {
 	if (strcmp(uwutc,"uwu")==0) {
 		return 0;
@@ -105,8 +85,30 @@ int main(void) {
 	}
 	
 	for (int i=0;i<statementcount;i++) {
+		char* constant_proc = stringstatements[i]+8;
+
 		statementindex = 0;
-		statements[i].constant = typeprocess(stringstatements[i]+8);
+		
+		switch (constant_proc[0]) {
+			case 'i':
+				statements[i].constant.type = 'i';
+				statements[i].constant.integer = atoi(constant_proc+2);
+				break;
+			case 'f':
+				statements[i].constant.type = 'f';
+				statements[i].constant.floatval = atof(constant_proc+2);
+				break;
+			case 's':
+				statements[i].constant.string = (char*) malloc(sizeof(constant_proc));
+				strcpy(statements[i].constant.string,constant_proc+2);
+				statements[i].constant.type = 's';
+				break;
+			case 'r':
+				statements[i].constant.string = (char*) malloc(sizeof(constant_proc));
+				strcpy(statements[i].constant.string,constant_proc+2);
+				statements[i].constant.type = 'r';
+				break;
+		}
 		statementbuffer = strtok(stringstatements[i]," ");
 		while (statementbuffer != NULL&&statementindex<2) {
 			switch (statementindex) {
@@ -149,6 +151,10 @@ int main(void) {
 				memory[statement.memory] = statement.constant;
 				break;
 			case 1:
+				if (statement.constant.type=='r') {
+					struct variable referenced = memory[uwutoindex(statement.constant.string)];
+					statement.constant = referenced;
+				}
 				switch (statement.constant.type) {
 					case 'i':
 						memory[statement.memory].integer = memory[statement.memory].integer + statement.constant.integer;
@@ -202,7 +208,23 @@ int main(void) {
 				}
 				break;
 			case 7:
-				printf("CONDJUMP");
+				switch (memory[statement.memory].type) {
+					case 'i':
+						if (memory[statement.memory].integer!=0) {
+							programcount = statement.constant.integer-2;
+						}
+						break;
+					case 'f':
+						if (memory[statement.memory].floatval!=0.0f) {
+							programcount = statement.constant.integer-2;
+						}
+						break;
+					case 's':
+						if (memory[statement.memory].string!="") {
+							programcount = statement.constant.integer-2;
+						}
+						break;
+				}
 				break;
 		}
 	}
