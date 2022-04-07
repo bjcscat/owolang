@@ -80,7 +80,7 @@ int main(void) {
 	while( statementbuffer != NULL ) {
 		stringstatements[statementindex] = (char*) calloc(statementcount,sizeof(char));
 		strcpy(stringstatements[statementindex],statementbuffer);
-	    	statementbuffer = strtok(NULL, "\n");
+	    statementbuffer = strtok(NULL, "\n");
 		statementindex++;
 	}
 	
@@ -99,12 +99,12 @@ int main(void) {
 				statements[i].constant.floatval = atof(constant_proc+2);
 				break;
 			case 's':
-				statements[i].constant.string = (char*) malloc(sizeof(constant_proc));
+				statements[i].constant.string = (char*) calloc(sizeof(constant_proc),sizeof(char*));
 				strcpy(statements[i].constant.string,constant_proc+2);
 				statements[i].constant.type = 's';
 				break;
 			case 'r':
-				statements[i].constant.string = (char*) malloc(sizeof(constant_proc));
+				statements[i].constant.string = (char*) calloc(sizeof(constant_proc),sizeof(char*));
 				strcpy(statements[i].constant.string,constant_proc+2);
 				statements[i].constant.type = 'r';
 				break;
@@ -195,6 +195,7 @@ int main(void) {
 				}
 				break;
 			case 6:
+				
 				switch (memory[statement.memory].type) {
 					case 'i':
 						printf("%i\n",memory[statement.memory].integer);
