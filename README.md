@@ -18,6 +18,8 @@ Print is structured as
 
 OPERATION MEMORY
 
+# operations
+
 owo - STORE - Stores a constant into given memory.
 
 Owo - ADD - Adds two values
