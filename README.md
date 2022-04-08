@@ -6,7 +6,7 @@ the worlds most owo language
 
 Statements are separated based on line so no more than one instruction per line
 There are 8 memory registers uwu,Uwu,uWu,UWu,uwU,UwU,uWU,and UWU.
-There are 3 types. Float, int, string.
+There are 2 types, number and string.
 Constants can also be a reference to another place in memory by putting "r:INDEX" as the constant
 
 Statements (besides PRINT) are structured as
