@@ -5,8 +5,7 @@
 
 struct variable {
 	char type;
-	int integer;
-	float floatval;
+	float number;
 	char* string;
 };
 
@@ -41,8 +40,7 @@ int main(void) {
 	char filebuffer[255];
 	FILE* codefile;
 	unsigned long filesize;
-	
-	codefile = fopen("./input.owol","r");
+	codefile = fopen("./input.omar","r");
 
 	if(codefile == NULL) {
 	    printf("File missing!\n");   
@@ -90,13 +88,9 @@ int main(void) {
 		statementindex = 0;
 		
 		switch (constant_proc[0]) {
-			case 'i':
-				statements[i].constant.type = 'i';
-				statements[i].constant.integer = atoi(constant_proc+2);
-				break;
-			case 'f':
-				statements[i].constant.type = 'f';
-				statements[i].constant.floatval = atof(constant_proc+2);
+			case 'n':
+				statements[i].constant.type = 'n';
+				statements[i].constant.number = atof(constant_proc+2);
 				break;
 			case 's':
 				statements[i].constant.string = (char*) calloc(sizeof(constant_proc),sizeof(char*));
@@ -155,53 +149,25 @@ int main(void) {
 				memory[statement.memory] = statement.constant;
 				break;
 			case 1:
-				switch (statement.constant.type) {
-					case 'i':
-						memory[statement.memory].integer = memory[statement.memory].integer + statement.constant.integer;
-					case 'f':
-						memory[statement.memory].floatval = memory[statement.memory].floatval + statement.constant.floatval;
-				}
+				memory[statement.memory].number = memory[statement.memory].number + statement.constant.number;
 				break;
 			case 2:
-				switch (statement.constant.type) {
-					case 'i':
-						memory[statement.memory].integer = memory[statement.memory].integer - statement.constant.integer;
-					case 'f':
-						memory[statement.memory].floatval = memory[statement.memory].floatval - statement.constant.floatval;
-				}
+				memory[statement.memory].number = memory[statement.memory].number - statement.constant.number;
 				break;
 			case 3:
-				switch (statement.constant.type) {
-					case 'i':
-						memory[statement.memory].integer = memory[statement.memory].integer * statement.constant.integer;
-					case 'f':
-						memory[statement.memory].floatval = memory[statement.memory].floatval * statement.constant.floatval;
-				}
+				memory[statement.memory].number = memory[statement.memory].number * statement.constant.number;
 				break;
 			case 4:
-				switch (statement.constant.type) {
-					case 'i':
-						memory[statement.memory].integer = memory[statement.memory].integer / statement.constant.integer;
-					case 'f':
-						memory[statement.memory].floatval = memory[statement.memory].floatval / statement.constant.floatval;
-				}
+				memory[statement.memory].number = memory[statement.memory].number / statement.constant.number;
 				break;
 			case 5:
-				switch (statement.constant.type) {
-					case 'i':
-						memory[statement.memory].integer = pow(memory[statement.memory].integer, statement.constant.integer);
-					case 'f':
-						memory[statement.memory].floatval = pow(memory[statement.memory].floatval,statement.constant.floatval);
-				}
+				memory[statement.memory].number = pow(memory[statement.memory].number, statement.constant.number);
 				break;
 			case 6:
 				
 				switch (memory[statement.memory].type) {
-					case 'i':
-						printf("%i\n",memory[statement.memory].integer);
-						break;
-					case 'f':
-						printf("%f\n",memory[statement.memory].floatval);
+					case 'n':
+						printf("%g\n",memory[statement.memory].number);
 						break;
 					case 's':
 						printf("%s\n",memory[statement.memory].string);
@@ -210,19 +176,14 @@ int main(void) {
 				break;
 			case 7:
 				switch (memory[statement.memory].type) {
-					case 'i':
-						if (memory[statement.memory].integer!=0) {
-							programcount = statement.constant.integer-2;
-						}
-						break;
-					case 'f':
-						if (memory[statement.memory].floatval!=0.0f) {
-							programcount = statement.constant.integer-2;
+					case 'n':
+						if (memory[statement.memory].number!=0.0) {
+							programcount = statement.constant.number-2;
 						}
 						break;
 					case 's':
 						if (memory[statement.memory].string!="") {
-							programcount = statement.constant.integer-2;
+							programcount = statement.constant.number-2;
 						}
 						break;
 				}
