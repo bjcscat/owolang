@@ -40,7 +40,7 @@ int main(void) {
 	char filebuffer[255];
 	FILE* codefile;
 	unsigned long filesize;
-	codefile = fopen("./input.omar","r");
+	codefile = fopen("./input.owol","r");
 
 	if(codefile == NULL) {
 	    printf("File missing!\n");   
