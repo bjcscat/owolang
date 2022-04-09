@@ -56,6 +56,8 @@ int main(void) {
 	while (fgets(&filebuffer,255,codefile)!=NULL) {
 		strcat(code, filebuffer);
 	}
+
+	fclose(codefile);
 	
 	// end of file reading section
 	// statement processing time
@@ -81,6 +83,8 @@ int main(void) {
 	    statementbuffer = strtok(NULL, "\n");
 		statementindex++;
 	}
+	
+	free(code);
 	
 	for (int i=0;i<statementcount;i++) {
 		char* constant_proc = stringstatements[i]+8;
@@ -132,8 +136,9 @@ int main(void) {
 	    	statementbuffer = strtok(NULL, " ");
 			statementindex++;
 		}
+		free(stringstatements[i]);
 	}
-
+						
 	// statement parsing done here, now time for the interpreter
 
 	struct variable memory[8];
@@ -191,8 +196,5 @@ int main(void) {
 		}
 	}
 	
-	//cleanup
-	
-	fclose(codefile);
 	return 0;
 }
