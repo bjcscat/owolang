@@ -88,7 +88,7 @@ int main(void) {
 	
 	for (int i=0;i<statementcount;i++) {
 		char* constant_proc = stringstatements[i]+8;
-
+        int quotesearch = 0;
 		statementindex = 0;
 		
 		switch (constant_proc[0]) {
@@ -96,9 +96,19 @@ int main(void) {
 				statements[i].constant.type = 'n';
 				statements[i].constant.number = atof(constant_proc+2);
 				break;
-			case 's':
+			case '"':
+			    for (int searchindex = 1;searchindex<strlen(constant_proc);searchindex++){
+			        if (constant_proc[searchindex]=='"') {
+			            quotesearch = searchindex;
+			            break;
+			        }
+			    }
+			    if (quotesearch==0) {
+			        printf("Parser Error: Unmatched quotation.");
+			        exit(1);
+			    }
 				statements[i].constant.string = (char*) calloc(sizeof(constant_proc),sizeof(char*));
-				strcpy(statements[i].constant.string,constant_proc+2);
+				strncpy(statements[i].constant.string,constant_proc+1,quotesearch-1);
 				statements[i].constant.type = 's';
 				break;
 			case 'r':
