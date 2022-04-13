@@ -53,7 +53,7 @@ int main(void) {
 	
 	code = (char*) calloc(filesize,sizeof(char));
 
-	while (fgets(&filebuffer,255,codefile)!=NULL) {
+	while (fgets(filebuffer,255,codefile)!=NULL) {
 		strcat(code, filebuffer);
 	}
 
@@ -78,7 +78,7 @@ int main(void) {
 	statementbuffer = strtok(code, "\n");
 	
 	while( statementbuffer != NULL ) {
-		stringstatements[statementindex] = (char*) calloc(statementcount,sizeof(char));
+		stringstatements[statementindex] = (char*) calloc(sizeof(statementbuffer),sizeof(char*));
 		strcpy(stringstatements[statementindex],statementbuffer);
 	    statementbuffer = strtok(NULL, "\n");
 		statementindex++;
