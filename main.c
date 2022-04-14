@@ -179,10 +179,6 @@ int main(void) {
 			struct variable referenced = memory[uwutoindex(statement.constant.string)];
 			statement.constant = referenced;
 		}
-		if (memory[statement.memory].type>0&&statement.constant.type>0&&getTypeName(memory[statement.memory].type)!="unknown"&&getTypeName(statement.constant.type)!="unknown"&&memory[statement.memory].type!=statement.constant.type){
-		    printf("Type mismatch at constant %i between %s and %s",programcount+1,getTypeName(memory[statement.memory].type),getTypeName(statement.constant.type));
-		    exit(1);
-		}
 		switch (statement.opcode) {
 			case 0:
 				memory[statement.memory] = statement.constant;
@@ -195,7 +191,20 @@ int main(void) {
 			    }
 				break;
 			case 2:
-				memory[statement.memory].number = memory[statement.memory].number - statement.constant.number;
+			    if (statement.constant.type == 'n'){
+				    if (memory[statement.memory].type=='n'){
+				        memory[statement.memory].number = memory[statement.memory].number - statement.constant.number;
+				    } else if (memory[statement.memory].type=='s'){
+				        if (statement.constant.number > 0) {
+				            memory[statement.memory].string = memory[statement.memory].string + (int) statement.constant.number;
+				        }else if(statement.constant.number < 0) {
+				            char* substr = malloc(abs(statement.constant.number));
+				            strncpy(substr,memory[statement.memory].string,(int) (strlen(memory[statement.memory].string)+(statement.constant.number)));
+				            free(memory[statement.memory].string);
+				            memory[statement.memory].string = substr;
+				        }
+				    }
+			    }
 				break;
 			case 3:
 				memory[statement.memory].number = memory[statement.memory].number * statement.constant.number;
