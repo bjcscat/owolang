@@ -17,8 +17,12 @@ struct statement {
 };
 
 char* strlwr(char* s) {
-  for(char *p=s; *p; p++) *p=tolower(*p);
-  return s;
+    char* temp = (char*) malloc(sizeof(s));
+    strcpy(temp,s);
+    for (int i=0;i<strlen(temp);i++){
+        temp[i]=tolower(s[i]);
+    }
+    return temp;
 }
 
 int uwutoindex(char* uwutc) {
@@ -100,7 +104,6 @@ int main(void) {
 			statements[i].constant.string = (char*) calloc(sizeof(constant_proc),sizeof(char*));
 			strcpy(statements[i].constant.string,constant_proc);
 			statements[i].constant.type = 'r';
-		    printf("REFERRED %s\n",constant_proc);
 		}else if(constant_proc[0]=='"'){
 		    for (int searchindex = 1;searchindex<strlen(constant_proc);searchindex++){
     		    if (constant_proc[searchindex]=='"') {
@@ -115,9 +118,9 @@ int main(void) {
 			statements[i].constant.string = (char*) calloc(sizeof(constant_proc),sizeof(char*));
 			strncpy(statements[i].constant.string,constant_proc+1,quotesearch-1);
 			statements[i].constant.type = 's';  
-		}else if(isdigit(constant_proc[0])){
+		}else if(atof(constant_proc)){
 			statements[i].constant.type = 'n';
-			statements[i].constant.number = atof(constant_proc+2);
+			statements[i].constant.number = atof(constant_proc);
 		}
 		statementbuffer = strtok(stringstatements[i]," ");
 		while (statementbuffer != NULL&&statementindex<2) {
