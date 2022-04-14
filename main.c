@@ -100,7 +100,8 @@ int main(void) {
 		char* constant_proc = stringstatements[i]+8;
         int quotesearch = 0;
 		statementindex = 0;
-		if (strncmp(strlwr(constant_proc),"uwu",3)==0){
+		char* lower = strlwr(constant_proc);
+		if (strncmp(lower,"uwu",3)==0){
 			statements[i].constant.string = (char*) calloc(sizeof(constant_proc),sizeof(char*));
 			strcpy(statements[i].constant.string,constant_proc);
 			statements[i].constant.type = 'r';
@@ -118,11 +119,12 @@ int main(void) {
 			statements[i].constant.string = (char*) calloc(sizeof(constant_proc),sizeof(char*));
 			strncpy(statements[i].constant.string,constant_proc+1,quotesearch-1);
 			statements[i].constant.type = 's';  
-		}else if(atof(constant_proc)||constant_proc[0]=='0'){
+		}else if(atof(constant_proc)){
 			statements[i].constant.type = 'n';
 			statements[i].constant.number = atof(constant_proc);
 		}
 		statementbuffer = strtok(stringstatements[i]," ");
+		free(lower);
 		while (statementbuffer != NULL&&statementindex<2) {
 			switch (statementindex) {
 				case 0:
