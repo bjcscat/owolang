@@ -13,7 +13,7 @@ Statements (besides PRINT) are structured as
 
 OPERATION MEMORY CONSTANT 
 
-This would equate to "Owo uwu n:10". This would add 10 to any value in register uwu.
+This would equate to "Owo uwu 10". This would add 10 to any value in register uwu.
 
 Print is structured as
 

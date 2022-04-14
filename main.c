@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
+#include <ctype.h>
 
 struct variable {
 	char type;
@@ -14,6 +15,15 @@ struct statement {
 	int memory;
 	struct variable constant;
 };
+
+char* strlwr(char* s) {
+    char* temp = (char*) malloc(sizeof(s));
+    strcpy(temp,s);
+    for (int i=0;i<strlen(temp);i++){
+        temp[i]=tolower(s[i]);
+    }
+    return temp;
+}
 
 int uwutoindex(char* uwutc) {
 	if (strcmp(uwutc,"uwu")==0) {
@@ -90,32 +100,27 @@ int main(void) {
 		char* constant_proc = stringstatements[i]+8;
         int quotesearch = 0;
 		statementindex = 0;
-		
-		switch (constant_proc[0]) {
-			case 'n':
-				statements[i].constant.type = 'n';
-				statements[i].constant.number = atof(constant_proc+2);
-				break;
-			case '"':
-			    for (int searchindex = 1;searchindex<strlen(constant_proc);searchindex++){
-			        if (constant_proc[searchindex]=='"') {
-			            quotesearch = searchindex;
-			            break;
-			        }
-			    }
-			    if (quotesearch==0) {
-			        printf("Parser Error: Unmatched quotation.");
-			        exit(1);
-			    }
-				statements[i].constant.string = (char*) calloc(sizeof(constant_proc),sizeof(char*));
-				strncpy(statements[i].constant.string,constant_proc+1,quotesearch-1);
-				statements[i].constant.type = 's';
-				break;
-			case 'r':
-				statements[i].constant.string = (char*) calloc(sizeof(constant_proc),sizeof(char*));
-				strcpy(statements[i].constant.string,constant_proc+2);
-				statements[i].constant.type = 'r';
-				break;
+		if (strncmp(strlwr(constant_proc),"uwu",3)==0){
+			statements[i].constant.string = (char*) calloc(sizeof(constant_proc),sizeof(char*));
+			strcpy(statements[i].constant.string,constant_proc);
+			statements[i].constant.type = 'r';
+		}else if(constant_proc[0]=='"'){
+		    for (int searchindex = 1;searchindex<strlen(constant_proc);searchindex++){
+    		    if (constant_proc[searchindex]=='"') {
+                    quotesearch = searchindex;
+                    break;
+    			}
+			}
+			if (quotesearch==0) {
+		        printf("Parser Error: Unmatched quotation.");
+			    exit(1);
+			}
+			statements[i].constant.string = (char*) calloc(sizeof(constant_proc),sizeof(char*));
+			strncpy(statements[i].constant.string,constant_proc+1,quotesearch-1);
+			statements[i].constant.type = 's';  
+		}else if(atof(constant_proc)||constant_proc[0]=='0'){
+			statements[i].constant.type = 'n';
+			statements[i].constant.number = atof(constant_proc);
 		}
 		statementbuffer = strtok(stringstatements[i]," ");
 		while (statementbuffer != NULL&&statementindex<2) {
