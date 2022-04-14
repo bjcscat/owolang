@@ -118,7 +118,7 @@ int main(void) {
 			statements[i].constant.string = (char*) calloc(sizeof(constant_proc),sizeof(char*));
 			strncpy(statements[i].constant.string,constant_proc+1,quotesearch-1);
 			statements[i].constant.type = 's';  
-		}else if(atof(constant_proc)){
+		}else if(atof(constant_proc)||constant_proc[0]=='0'){
 			statements[i].constant.type = 'n';
 			statements[i].constant.number = atof(constant_proc);
 		}
