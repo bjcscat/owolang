@@ -5,7 +5,7 @@
 #include <ctype.h>
 
 struct variable {
-	char type;
+	unsigned char type;
 	float number;
 	char* string;
 };
@@ -43,6 +43,19 @@ int uwutoindex(char* uwutc) {
 	} else if (strcmp(uwutc,"UWU")==0) {
 		return 7;
 	}
+}
+
+char* getTypeName(char type){
+    switch (type) {
+        case 'n':
+            return "number";
+        case 's':
+            return "string";
+        case 'u':
+            return "undefined";
+        default:
+            return "unknown";
+    }
 }
 
 int main(void) {
@@ -119,7 +132,7 @@ int main(void) {
 			statements[i].constant.string = (char*) calloc(sizeof(constant_proc),sizeof(char*));
 			strncpy(statements[i].constant.string,constant_proc+1,quotesearch-1);
 			statements[i].constant.type = 's';  
-		}else if(atof(constant_proc)){
+		}else if(atof(constant_proc)||strcmp(constant_proc,"0")==0){
 			statements[i].constant.type = 'n';
 			statements[i].constant.number = atof(constant_proc);
 		}
@@ -166,12 +179,20 @@ int main(void) {
 			struct variable referenced = memory[uwutoindex(statement.constant.string)];
 			statement.constant = referenced;
 		}
+		if (memory[statement.memory].type>0&&statement.constant.type>0&&getTypeName(memory[statement.memory].type)!="unknown"&&getTypeName(statement.constant.type)!="unknown"&&memory[statement.memory].type!=statement.constant.type){
+		    printf("Type mismatch at constant %i between %s and %s",programcount+1,getTypeName(memory[statement.memory].type),getTypeName(statement.constant.type));
+		    exit(1);
+		}
 		switch (statement.opcode) {
 			case 0:
 				memory[statement.memory] = statement.constant;
 				break;
 			case 1:
-				memory[statement.memory].number = memory[statement.memory].number + statement.constant.number;
+			    if (statement.constant.type == 'n'){
+				    memory[statement.memory].number = memory[statement.memory].number + statement.constant.number;
+			    } else if(statement.constant.type == 's') {
+			        strcat(memory[statement.memory].string,statement.constant.string);
+			    }
 				break;
 			case 2:
 				memory[statement.memory].number = memory[statement.memory].number - statement.constant.number;
@@ -186,7 +207,6 @@ int main(void) {
 				memory[statement.memory].number = pow(memory[statement.memory].number, statement.constant.number);
 				break;
 			case 6:
-				
 				switch (memory[statement.memory].type) {
 					case 'n':
 						printf("%g\n",memory[statement.memory].number);
