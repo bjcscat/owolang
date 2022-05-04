@@ -58,12 +58,16 @@ char* getTypeName(char type){
     }
 }
 
-int main(void) {
+int main(int argc, char** argv) {
+	if (argc<=1) {
+		puts("Please specify an input file.\n");
+		exit(1);
+	}
 	char* code;
 	char filebuffer[255];
 	FILE* codefile;
 	unsigned long filesize;
-	codefile = fopen("./input.owol","r");
+	codefile = fopen(argv[1],"r");
 
 	if(codefile == NULL) {
 	    printf("File missing!\n");   
